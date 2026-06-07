@@ -1,12 +1,11 @@
 from fastapi import FastAPI
 
+from app.api.health import router as health_router
+
 app = FastAPI(
     title="RepoMindAI",
     description="AI-powered multi-agent developer productivity assistant",
     version="0.1.0"
 )
 
-
-@app.get("/")
-def root():
-    return {"message": "Welcome to RepoMindAI 🚀"}
+app.include_router(health_router)
