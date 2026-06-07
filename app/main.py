@@ -1,11 +1,12 @@
 from fastapi import FastAPI
 
 from app.api.health import router as health_router
+from app.config.settings import settings
 
 app = FastAPI(
-    title="RepoMindAI",
+    title=settings.app_name,
     description="AI-powered multi-agent developer productivity assistant",
-    version="0.1.0"
+    version=settings.app_version
 )
 
 app.include_router(health_router)
