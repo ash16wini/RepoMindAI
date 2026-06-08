@@ -41,3 +41,11 @@ def get_repo_readme(owner: str, repo: str):
     ).decode("utf-8")
 
     return content
+
+def parse_github_url(url: str):
+    parts = url.rstrip("/").split("/")
+
+    owner = parts[-2]
+    repo = parts[-1]
+
+    return owner, repo
