@@ -1,6 +1,7 @@
 
 import requests
 import base64
+import re
 
 def get_repo_info(owner: str, repo: str):
     url = f"https://api.github.com/repos/{owner}/{repo}"
@@ -49,3 +50,19 @@ def parse_github_url(url: str):
     repo = parts[-1]
 
     return owner, repo
+
+def extract_github_repo(query: str):
+    pattern = r"https://github\.com/([^/]+)/([^/\s]+)"
+
+    match = re.search(pattern, query)
+
+    if match:
+        owner = match.group(1)
+        repo = match.group(2)
+
+        if repo.endswith(".git"):
+            repo = repo[:-4]
+
+        return owner, repo
+
+    return None, None
