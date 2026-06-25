@@ -2,6 +2,8 @@ from app.models.gemini import generate_response
 from app.memory.store import conversation_memory
 from app.graph.state import AgentState
 from app.agents.repo_agent import repo_agent
+from app.tools.github_tool import extract_github_repo
+
 
 def router_node(state: AgentState) -> AgentState:
     query = state["user_query"].lower()
@@ -12,6 +14,13 @@ def router_node(state: AgentState) -> AgentState:
         state["intent"] = "coding"
     else:
         state["intent"] = "general"
+
+    owner, repo = extract_github_repo(
+        state["user_query"]
+    )
+
+    state["owner"] = owner
+    state["repo"] = repo
 
     return state
 
