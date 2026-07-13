@@ -51,6 +51,16 @@ export default function ChatBox({ repository }) {
         }
     };
 
+    const copyToClipboard = async (text) => {
+    try {
+        await navigator.clipboard.writeText(text);
+        alert("Answer copied!");
+    } catch (error) {
+        console.error(error);
+        alert("Failed to copy.");
+    }
+};
+
     useEffect(() => {
     chatEndRef.current?.scrollIntoView({
         behavior: "smooth",
@@ -83,6 +93,14 @@ export default function ChatBox({ repository }) {
                 {loading ? "🤖 Thinking..." : "🚀 Ask RepoMindAI"}
             </button>
 
+            <button
+    onClick={() => setMessages([])}
+    disabled={messages.length === 0}
+    className="mt-3 ml-3 bg-red-500 hover:bg-red-600 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg"
+>
+    🗑 Clear Chat
+</button>
+
             {messages.map((msg, index) => (
                 <div
                     key={index}
@@ -97,7 +115,16 @@ export default function ChatBox({ repository }) {
                     </div>
 
                     <div className="bg-gray-100 p-4 rounded-lg">
-                        <strong>RepoMindAI</strong>
+                        <div className="flex justify-between items-center">
+    <strong>🤖 RepoMindAI</strong>
+
+    <button
+        onClick={() => copyToClipboard(msg.answer)}
+        className="text-sm bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded"
+    >
+        📋 Copy
+    </button>
+</div>
 
                         <ReactMarkdown
     remarkPlugins={[remarkGfm]}
