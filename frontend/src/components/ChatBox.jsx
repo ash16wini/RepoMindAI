@@ -4,13 +4,15 @@ import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import api from "../services/api";
 
 export default function ChatBox({ repository }) {
     const [question, setQuestion] = useState("");
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const chatEndRef = useRef(null);
 
     const askAI = async () => {
         if (!question.trim()) return;
@@ -49,6 +51,12 @@ export default function ChatBox({ repository }) {
         }
     };
 
+    useEffect(() => {
+    chatEndRef.current?.scrollIntoView({
+        behavior: "smooth",
+    });
+}, [messages]);
+
     return (
         <div className="bg-white mt-8 rounded-xl shadow-lg p-8">
             <h2 className="text-2xl font-semibold mb-5">
@@ -72,7 +80,7 @@ export default function ChatBox({ repository }) {
                 }
                 className="mt-5 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white px-6 py-3 rounded-lg"
             >
-                {loading ? "Thinking..." : "Ask RepoMindAI"}
+                {loading ? "🤖 Thinking..." : "🚀 Ask RepoMindAI"}
             </button>
 
             {messages.map((msg, index) => (
@@ -119,6 +127,7 @@ export default function ChatBox({ repository }) {
     );
 },
     }}
+    
 >
     {msg.answer}
 </ReactMarkdown>
@@ -150,6 +159,7 @@ export default function ChatBox({ repository }) {
                     </div>
                 </div>
             ))}
+            <div ref={chatEndRef}></div>
         </div>
     );
 }
