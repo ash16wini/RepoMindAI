@@ -1,15 +1,29 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1.router import api_router
-from app.config.settings import settings
+from app.api.routes import router
+from app.api.github_routes import router as github_router
+from app.api.v1.health_score import router as health_router
+from app.api.v1.dashboard import router as dashboard_router
 
 app = FastAPI(
-    title=settings.app_name,
-    description="AI-powered multi-agent developer productivity assistant",
-    version=settings.app_version
+    title="RepoMindAI",
+    version="1.0.0"
 )
 
-app.include_router(
-    api_router,
-    prefix="/api/v1"
+# ----------- ADD THIS -----------
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
+# -------------------------------
+
+app.include_router(router)
+app.include_router(github_router)
+app.include_router(health_router)
+app.include_router(dashboard_router)

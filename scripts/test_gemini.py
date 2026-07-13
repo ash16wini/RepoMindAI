@@ -1,7 +1,5 @@
-from app.models.gemini import generate_response
+from app.models.gemini import generate_answer
 
-response = generate_response(
-    "Explain what FastAPI is in 2 lines."
-)
+answer = generate_answer("Say Hello in one sentence.")
 
-print(response)
+print(answer)

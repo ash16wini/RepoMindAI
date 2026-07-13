@@ -1,17 +1,14 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
-class Settings(BaseSettings):
-    app_name: str = "RepoMindAI"
-    app_version: str = "0.1.0"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-    gemini_api_key: str = ""
-    github_token: str = ""
+MODEL_NAME = "all-MiniLM-L6-v2"
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        extra="ignore"
-    )
+BATCH_SIZE = 16
 
+EMBED_BATCH_SIZE = 2
 
-settings = Settings()
+COLLECTION_PREFIX = "repo_"
