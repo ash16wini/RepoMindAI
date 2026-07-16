@@ -6,23 +6,16 @@ __pycache__/
 # Environment
 .env
 
-# Database
+# ChromaDB
 chroma_db/
 
-# Cloned repositories
+# Repository clones
 repositories/
 
-# Node
+# Frontend
 node_modules/
 dist/
-
-# VS Code
-.vscode/
 
 # OS
 .DS_Store
 Thumbs.db
-
-.ipynb_checkpoints/
-.pytest_cache/
-.coverage
