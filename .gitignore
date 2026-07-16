@@ -1,32 +1,28 @@
-# Virtual Environment
-.venv/
-
 # Python
+.venv/
 __pycache__/
-*.py[cod]
-*.pyo
-*.pyd
+*.pyc
 
-# Environment variables
+# Environment
 .env
+
+# Database
+chroma_db/
+
+# Cloned repositories
+repositories/
+
+# Node
+node_modules/
+dist/
 
 # VS Code
 .vscode/
 
-# Jupyter
-.ipynb_checkpoints/
-
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
-# Logs
-*.log
-
-# Build artifacts
-build/
-dist/
-*.egg-info/
-
-# Ignore cloned repositories
-repositories/
+.ipynb_checkpoints/
+.pytest_cache/
+.coverage

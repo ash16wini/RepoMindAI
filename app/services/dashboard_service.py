@@ -1,4 +1,4 @@
-from app.services.health_service import calculate_health_score
+from app.services.health_service import calculate_health
 from app.repository.summary import summarize_repository
 from app.repository.architecture_summary import summarize_architecture
 from app.repository.dependency_summary import summarize_dependencies
@@ -9,7 +9,7 @@ def dashboard_service(repository: str):
 
     repo_path = f"repositories/{repository}"
 
-    health = calculate_health_score(repo_path)
+    health = calculate_health(repo_path)
 
     summary = summarize_repository(repo_path)
 

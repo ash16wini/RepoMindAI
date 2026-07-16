@@ -4,14 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import router
 from app.api.github_routes import router as github_router
 from app.api.v1.health_score import router as health_router
-from app.api.v1.dashboard import router as dashboard_router
 
 app = FastAPI(
     title="RepoMindAI",
     version="1.0.0"
 )
 
-# ----------- ADD THIS -----------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -21,9 +19,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# -------------------------------
 
 app.include_router(router)
 app.include_router(github_router)
 app.include_router(health_router)
-app.include_router(dashboard_router)

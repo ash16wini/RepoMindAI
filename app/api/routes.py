@@ -1,7 +1,9 @@
+from app.services.health_service import calculate_health
 from fastapi import APIRouter
 from pydantic import BaseModel
 
 from app.services.chat_service import chat_service
+from app.services.repository_summary_service import repository_summary
 
 from app.repository.github_loader import clone_repository
 from app.repository.loader import load_repository
@@ -10,6 +12,7 @@ from app.embeddings.embedder import create_embeddings
 from app.vectorstore.chroma_store import store_embeddings
 
 from app.services.repository_service import repository_service
+from app.services.review_service import review_repository
 
 router = APIRouter()
 
@@ -46,3 +49,18 @@ def load_repository_api(request: RepositoryRequest):
     print("=" * 50)
 
     return repository_service(request.url)
+
+from pydantic import BaseModel
+
+
+class SummaryRequest(BaseModel):
+    repository: str
+
+
+@router.post("/repository-summary")
+def get_repository_summary(request: SummaryRequest):
+    return repository_summary(request.repository)
+
+@router.post("/review")
+def review(request: SummaryRequest):
+    return review_repository(request.repository)

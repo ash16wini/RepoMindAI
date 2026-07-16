@@ -1,5 +1,5 @@
 from app.embeddings.embedder import model
-from app.vectorstore.chroma_store import search
+from app.vectorstore.chroma_store import search, get_collection
 
 
 def retrieve(
@@ -10,11 +10,19 @@ def retrieve(
 
     query_embedding = model.encode(query)
 
+    print("=" * 60)
+    print("Repository Name:", repo_name)
+
     results = search(
         repo_name=repo_name,
         query_embedding=query_embedding,
         k=n_results
     )
+
+    collection = get_collection(repo_name)
+    print("Collection:", repo_name)
+    print("Vector Count:", collection.count())
+    print("=" * 60)
 
 
 

@@ -1,45 +1,63 @@
-from app.repository.analyzer import analyze_repository
+from pathlib import Path
 
 
-def calculate_health_score(repo_path: str):
+def calculate_health(repo_name: str):
 
-    stats = analyze_repository(repo_path)
+    repo_path = Path("repositories") / repo_name
 
-    files = stats["files"]
-    functions = stats["functions"]
-    classes = stats["classes"]
+    score = 0
 
-    score = 100
+    details = {}
 
-    # Too many functions per file
-    if files > 0:
-        avg_functions_per_file = functions / files
-        if avg_functions_per_file > 5:
-            score -= 10
+    # README
+
+    if (repo_path / "README.md").exists():
+        score += 20
+        details["Documentation"] = "Excellent"
     else:
-        avg_functions_per_file = 0
+        details["Documentation"] = "Missing"
 
-    # Too many functions per class
-    if classes > 0:
-        avg_functions_per_class = functions / classes
-        if avg_functions_per_class > 10:
-            score -= 10
-    else:
-        avg_functions_per_class = 0
+    # Requirements
 
-    if score >= 90:
-        grade = "A"
-    elif score >= 80:
-        grade = "B"
-    elif score >= 70:
-        grade = "C"
+    if (
+        (repo_path / "requirements.txt").exists()
+        or
+        (repo_path / "pyproject.toml").exists()
+    ):
+        score += 20
+        details["Dependencies"] = "Present"
     else:
-        grade = "D"
+        details["Dependencies"] = "Missing"
+
+    # Tests
+
+    tests = list(repo_path.glob("tests*"))
+
+    if tests:
+        score += 20
+        details["Testing"] = "Present"
+    else:
+        details["Testing"] = "Missing"
+
+    # GitHub Actions
+
+    if (repo_path / ".github").exists():
+        score += 20
+        details["CI/CD"] = "Present"
+    else:
+        details["CI/CD"] = "Missing"
+
+    # Python Files
+
+    py_files = list(repo_path.rglob("*.py"))
+
+    if len(py_files) > 10:
+        score += 20
+        details["Code Quality"] = "Good"
+    else:
+        details["Code Quality"] = "Basic"
 
     return {
-        "health_score": score,
-        "grade": grade,
-        "statistics": stats,
-        "avg_functions_per_file": round(avg_functions_per_file, 2),
-        "avg_functions_per_class": round(avg_functions_per_class, 2)
+        "score": score,
+        "details": details
     }
