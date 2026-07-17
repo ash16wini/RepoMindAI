@@ -1,12 +1,40 @@
+import re
 import chromadb
 
 client = chromadb.PersistentClient(path="chroma_db")
+
+
+def sanitize_collection_name(name: str) -> str:
+    """
+    Sanitize repository names to make them valid ChromaDB collection names.
+
+    Rules:
+    - Only letters, numbers, dots, underscores, and hyphens
+    - Must start and end with a letter or number
+    - Length must be between 3 and 512 characters
+    """
+
+    # Replace invalid characters with "_"
+    name = re.sub(r"[^a-zA-Z0-9._-]", "_", name)
+
+    # Remove invalid starting/ending characters
+    name = name.strip("._-")
+
+    # Ensure minimum length
+    if len(name) < 3:
+        name += "_repo"
+
+    # Ensure maximum length
+    return name[:512]
 
 
 def get_collection(repo_name: str):
     """
     Create or open a collection for a specific repository.
     """
+
+    repo_name = sanitize_collection_name(repo_name)
+
     return client.get_or_create_collection(
         name=repo_name
     )
@@ -18,6 +46,8 @@ def store_embeddings(
     embeddings,
     start_index=0
 ):
+
+    repo_name = sanitize_collection_name(repo_name)
 
     collection = get_collection(repo_name)
 
@@ -64,7 +94,10 @@ def search(
     k=5
 ):
 
+    repo_name = sanitize_collection_name(repo_name)
+
     collection = get_collection(repo_name)
+
     print("Final Count:", collection.count())
 
     return collection.query(
